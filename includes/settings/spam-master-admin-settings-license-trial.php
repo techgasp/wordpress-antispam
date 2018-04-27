@@ -1,13 +1,9 @@
 <?php
-//include_once($_SERVER['DOCUMENT_ROOT'].'/wp-load.php' );
-if(!function_exists('wp_get_current_user')) {
-    include(ABSPATH . "wp-includes/pluggable.php");
-}
 ///////////////////////////////////////////////////
 //warning, fiddling here cause cause trouble....///
 //Confucius says life is sweet as a bitter orange//
 ///////////////////////////////////////////////////
-global $wpdb, $blog_id, $current_user;
+global $wpdb, $blog_id;
 //Prepare License stuff
 $platform = "Wordpress";
 $spam_master_cron = "FALSE";
@@ -25,17 +21,7 @@ if($response_key == 'INACTIVE'){
 	$wordpress = get_bloginfo('version');
 	$blog = get_blog_option($blog_id, 'blogname');
 		if(empty($blog)){
-			$blog = $admin_email;
-		}
-	$current_user = wp_get_current_user();
-	$admin_first_name = $current_user->user_firstname;
-	$admin_last_name = $current_user->user_lastname;
-	$admin_name_joined = $admin_first_name . ' ' . $admin_last_name;
-		if(empty($admin_first_name)){
-			$blog_admin_name_joined = $blog;
-		}
-		else{
-			$blog_admin_name_joined = $admin_name_joined;
+			$blog = 'Wp multi';
 		}
 	$web_address = get_site_url();
 	$address_unclean = $web_address;
@@ -70,7 +56,6 @@ if($response_key == 'INACTIVE'){
 								'spam_master_type' => $spam_master_type_set,
 								'blog_name' => $blog,
 								'blog_address' => $address,
-								'blog_admin' => $blog_admin_name_joined,
 								'blog_email' => $blog_id.'-'.$admin_email,
 								'blog_hostname' => $spam_master_server_hostname,
 								'blog_ip' => $spam_master_server_ip,
@@ -137,17 +122,7 @@ if($response_key == 'INACTIVE'){
 	$wordpress = get_bloginfo('version');
 	$blog = get_option('blogname');
 		if(empty($blog)){
-			$blog = $admin_email;
-		}
-	$current_user = wp_get_current_user();
-	$admin_first_name = $current_user->user_firstname;
-	$admin_last_name = $current_user->user_lastname;
-	$admin_name_joined = $admin_first_name . ' ' . $admin_last_name;
-		if(empty($admin_first_name)){
-			$blog_admin_name_joined = $blog;
-		}
-		else{
-			$blog_admin_name_joined = $admin_name_joined;
+			$blog = 'Wp single';
 		}
 	$web_address = get_site_url();
 	$address_unclean = $web_address;
@@ -182,7 +157,6 @@ if($response_key == 'INACTIVE'){
 								'spam_master_type' => $spam_master_type_set,
 								'blog_name' => $blog,
 								'blog_address' => $address,
-								'blog_admin' => $blog_admin_name_joined,
 								'blog_email' => $admin_email,
 								'blog_hostname' => $spam_master_server_hostname,
 								'blog_ip' => $spam_master_server_ip,

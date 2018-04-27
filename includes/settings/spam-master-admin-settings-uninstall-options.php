@@ -1,4 +1,7 @@
 <?php
+if(!function_exists('wp_get_current_user')) {
+	include(ABSPATH . "wp-includes/pluggable.php"); 
+}
 global $wpdb, $blog_id, $current_user;
 if ((is_user_logged_in()) && (current_user_can( 'administrator' ))){
 //Prepare Uninstall stuff
@@ -234,7 +237,7 @@ $spam_master_cron = "UNINS";
 	delete_option('comment_spam_char');
 	delete_option('comment_spam_char_set');
 	delete_option('spam_master_emails_extra_email');
-	delete_blog_option('spam_master_emails_extra_email_list');
+	delete_option('spam_master_emails_extra_email_list');
 	}
 }
 ?>

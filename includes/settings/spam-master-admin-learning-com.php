@@ -61,6 +61,10 @@ if($response_key == 'VALID' || $response_key == 'MALFUNCTION_1' || $response_key
 			exit();
 		}
 	}
+	//exempt admins from check
+	if(!function_exists('wp_get_current_user')) {
+		include(ABSPATH . "wp-includes/pluggable.php"); 
+	}
 	if(current_user_can( 'administrator' ) OR current_user_can( 'editor' ) OR current_user_can( 'author' ) OR current_user_can( 'contributor' )){
 		$approved = '1';
 		return $approved;

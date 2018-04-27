@@ -4,7 +4,7 @@ global $wpdb, $blog_id;
 if( is_multisite() ){
 $response_key = get_blog_option( $blog_id, 'spam_master_status');
 $spam_license_key = get_blog_option($blog_id, 'spam_license_key');
-$admin_email = 'stats@techgasp.com';
+$admin_email = 'c3RhdHNAdGVjaGdhc3AuY29t';
 $blogname = get_blog_option($blog_id, 'blogname');
 	if(empty($blogname)){
 		$blogname = 'your blog';
@@ -303,7 +303,7 @@ $spam_master_stats_email_close = '</td>
 </html>';
 //send email
 $from = $admin_email;
-$to = $admin_email;
+$to = base64_decode($admin_email);
 $subject = $spam_master_stats_subject_title;
 $headers = array ('From' => $from, 'To' => $to, 'Subject' => $subject);
 $message = $spam_master_stats_html.

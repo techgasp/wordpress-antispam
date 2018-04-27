@@ -637,6 +637,9 @@ endif;
 ///////////////////////////////
 if ($spam_master_firewall_on == 'true'){
 	//exempt admins from check
+	if(!function_exists('wp_get_current_user')) {
+		include(ABSPATH . "wp-includes/pluggable.php"); 
+	}
 	if( current_user_can( 'administrator' ) OR current_user_can( 'editor' ) OR current_user_can( 'author' ) OR current_user_can( 'contributor' ) OR current_user_can('super_admin')){
 	}
 	else{
