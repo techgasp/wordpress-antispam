@@ -2,7 +2,7 @@
 /**
 Plugin Name: Spam Master
 Plugin URI: https://wordpress.techgasp.com/spam-master/
-Version: 5.5.8
+Version: 5.5.9
 Author: TechGasp
 Author URI: http://wordpress.techgasp.com
 Text Domain: spam-master
@@ -25,7 +25,7 @@ License: GPL2 or later
 */
 if(!class_exists('spam_master')) :
 ///////DEFINE///////
-define( 'SPAM_MASTER_VERSION', '5.5.8' );
+define( 'SPAM_MASTER_VERSION', '5.5.9' );
 define( 'SPAM_MASTER_NAME', 'Spam Master' );
 
 class spam_master{

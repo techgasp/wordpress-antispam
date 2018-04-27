@@ -2,8 +2,8 @@
 Contributors: TechGasp
 Tags: firewall, spam, antispam, anti-spam, registration, hotmail, bot, captcha, comment, block registration, block user, login
 Requires at least: 3.5
-Tested up to: 4.9.4
-Stable tag: 5.5.8
+Tested up to: 4.9.5
+Stable tag: 5.5.9
 License: GPLv2 or later
 
 Spam Master is the Ultimate Spam Protection plugin that blocks new user registrations and post comments with Real Time anti-spam lists.
@@ -37,7 +37,7 @@ Fast loading, Spam Master is modular... it only loads what is needed to keep you
 * Uses real time scan from millions of known spamming sources (effectively blocks those nasty hotmail, live, msn and outlook registrations)
 * Includes Statistical information to keep your life easy
 * Spam Master Learning makes your Wordpress an Anti-Spam enforcer by collecting data for analysis
-* Spam Master allows you to customise the frontend blocked registration message
+* Spam Master allows you to customize the frontend blocked registration message
 * Spam Master allows you to view a week of blocked registrations (date and email) and export the data as csv file. Data gets auto-deleted after 7 days to keep your database light
 * Spam Master allows you to hide the website field from your theme comments form
 * Spam Master includes Character Blocking. Option to individually activate russian, chinese, asian, arabic characters, immediately blocks comments that use those characters
@@ -122,7 +122,10 @@ Fast loading, Spam Master is modular... it only loads what is needed to keep you
 == Changelog ==
 
 = 5.5.8 =
-* 
+* Base enconding emails for safety
+* Removing blog admin for faster checks
+* Fixing option error preventing plugin from running uninstall 
+* Fixing issues with current_user_can calls
 
 = 5.5.7 =
 * Fixing Illegal string offset in comments learning
