@@ -84,6 +84,10 @@ $spam_master_cron = "UNINS";
 	delete_blog_option($blog_id, 'spam_master_recaptcha_login');
 	delete_blog_option($blog_id, 'spam_master_recaptcha_comments');
 	delete_blog_option($blog_id, 'spam_master_recaptcha_public_key');
+	/* code added by Oliver Maor - delete "AMP off" setting as well as the preview option (obviously forgotten before) */
+	delete_blog_option($blog_id, 'spam_master_recaptcha_preview');
+	delete_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
+	/* End code added by Oliver Maor */
 	delete_blog_option($blog_id, 'spam_license_key_old_code');
 	update_blog_option($blog_id, 'blacklist_keys_bk', get_blog_option($blog_id, 'blacklist_keys'));
 	delete_blog_option($blog_id, 'blacklist_keys');
@@ -200,6 +204,10 @@ $spam_master_cron = "UNINS";
 	delete_option('spam_master_recaptcha_login');
 	delete_option('spam_master_recaptcha_comments');
 	delete_option('spam_master_recaptcha_public_key');
+	/* code added by Oliver Maor - delete "AMP off" setting as well as the preview option (obviously forgotten before) */
+	delete_option('spam_master_recaptcha_preview');
+	delete_option('spam_master_recaptcha_ampoff');
+	/* End code added by Oliver Maor */
 	delete_option('spam_license_key_old_code');
 	update_option('blacklist_keys_bk', get_option('blacklist_keys'));
 	delete_option('blacklist_keys');
