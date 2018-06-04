@@ -205,7 +205,7 @@ $spam_master_comment_website_field = get_option('spam_master_comment_website_fie
 //////////////////////////////////////////////
 if ($spam_master_recaptcha_registration == 'true'){
 	if ($spam_master_recaptcha_public_key !== ''){
-		if ( $spam_master_recaptcha_ampoff !== 'true' ) {
+		if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
 			//MULTISITE HOOKS
 			if(is_multisite()){
 				add_action('signup_extra_fields', 'spam_master_recaptcha_register_field' );
@@ -298,7 +298,7 @@ return $errors;
 //////////////////////////////////////
 if ($spam_master_recaptcha_login == 'true'){
 	if ($spam_master_recaptcha_public_key !== ''){
-		if ( $spam_master_recaptcha_ampoff !== 'true' ) {
+		if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
 			//MULTISITE HOOKS
 			if(is_multisite()){
 				add_action('signup_extra_fields', 'spam_master_recaptcha_login_field' );
@@ -385,7 +385,7 @@ function spam_master_get_error_message() {
 /////////////////////////////////////////
 if ($spam_master_recaptcha_comments == 'true'){
 	if ($spam_master_recaptcha_public_key !== ''){
-		if ( $spam_master_recaptcha_ampoff !== 'true' ) {
+		if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
 			//MULTISITE HOOKS
 			if(is_multisite()){
 				add_action( 'comment_form_after_fields', 'spam_master_comment_field', 1);
@@ -783,3 +783,18 @@ function spam_master_attempt_remove_comment_website_field($fields){
 }
 add_filter('comment_form_default_fields','spam_master_attempt_remove_comment_website_field');
 }
+/* Code added by Oliver Maor */
+/* Function to check whether an AMP page is being retrieved */
+/* Supports two AMP Plugins: "AMP for WP" and "AMP" by Automattic, Inc. */
+function spam_master_amp_check() {
+	if (function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint () ) {
+		return 'true';
+	}
+	elseif (function_exists( 'is_amp_endpoint' ) && is_amp_endpoint () ) {
+		return 'true';
+	}
+	else{
+		return 'false';
+	}
+}
+/* End code added by Oliver Maor */
