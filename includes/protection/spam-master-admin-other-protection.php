@@ -1,5 +1,4 @@
 <?php
-/* Contains code added by Oliver Maor. Is somewhat tested, but should be double-checked before final inclusion. */
 function menu_rct_single(){
 	if ( is_admin() )
 	add_submenu_page( 'spam-master', 'Protection Tools', 'Protection Tools', 'manage_options', 'spam-master-recaptcha', 'spam_master_recaptcha' );
@@ -177,9 +176,7 @@ $spam_master_recaptcha_registration = get_blog_option($blog_id, 'spam_master_rec
 $spam_master_recaptcha_login = get_blog_option($blog_id, 'spam_master_recaptcha_login');
 $spam_master_recaptcha_comments = get_blog_option($blog_id, 'spam_master_recaptcha_comments');
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
-/* Code added by Oliver Maor */
 $spam_master_recaptcha_ampoff = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 $spam_master_honeypot_timetrap = get_blog_option($blog_id, 'spam_master_honeypot_timetrap');
 $spam_master_honeypot_timetrap_speed = get_blog_option($blog_id, 'spam_master_honeypot_timetrap_speed');
 $spam_master_signature_registration = get_blog_option($blog_id, 'spam_master_signature_registration');
@@ -194,9 +191,7 @@ $spam_master_recaptcha_registration = get_option('spam_master_recaptcha_registra
 $spam_master_recaptcha_login = get_option('spam_master_recaptcha_login');
 $spam_master_recaptcha_comments = get_option('spam_master_recaptcha_comments');
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
-/* Code added by Oliver Maor */
 $spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 $spam_master_honeypot_timetrap = get_option('spam_master_honeypot_timetrap');
 $spam_master_honeypot_timetrap_speed = get_option('spam_master_honeypot_timetrap_speed');
 $spam_master_signature_registration = get_option('spam_master_signature_registration');
@@ -210,18 +205,21 @@ $spam_master_comment_website_field = get_option('spam_master_comment_website_fie
 //////////////////////////////////////////////
 if ($spam_master_recaptcha_registration == 'true'){
 	if ($spam_master_recaptcha_public_key !== ''){
-		//MULTISITE HOOKS
-		if(is_multisite()){
-		add_action('signup_extra_fields', 'spam_master_recaptcha_register_field' );
-		add_action('register_form', 'spam_master_recaptcha_register_field' );
-		add_action('wpmu_validate_user_signup', 'spam_master_recaptcha_register_multi_errors', 99);
+		if ( $spam_master_recaptcha_ampoff !== 'true' ) {
+			//MULTISITE HOOKS
+			if(is_multisite()){
+				add_action('signup_extra_fields', 'spam_master_recaptcha_register_field' );
+				add_action('register_form', 'spam_master_recaptcha_register_field' );
+				add_action('wpmu_validate_user_signup', 'spam_master_recaptcha_register_multi_errors', 99);
+			}
+			//SINGLE SITE HOOKS
+			else{
+				add_action('login_enqueue_scripts', 'spam_master_recaptcha_css');
+				add_action('register_form', 'spam_master_recaptcha_register_field' );
+				add_filter( 'registration_errors', 'spam_master_recaptcha_register_single_errors', 10, 3 );
+			}
 		}
-		//SINGLE SITE HOOKS
-		else{
-		add_action('login_enqueue_scripts', 'spam_master_recaptcha_css');
-		add_action('register_form', 'spam_master_recaptcha_register_field' );
-		add_filter( 'registration_errors', 'spam_master_recaptcha_register_single_errors', 10, 3 );
-		}
+
 //CSS FOR SINGLE SITE
 function spam_master_recaptcha_css(){
 	echo '<style type="text/css">';
@@ -236,21 +234,12 @@ if(is_multisite()){
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_blog_option($blog_id, 'spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_blog_option($blog_id, 'spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
 else{
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_option('spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
-/* Code added by Oliver Maor */
-if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-/*End code added by Oliver Maor */
 	?>
 	<label>Re-CAPTCHA Code</label>
 	<?php
@@ -267,58 +256,49 @@ if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_
 	<p>Press <b>Register</b> after verifying captcha.</p>
 	<br>
 	<?php
-	/* Code added by Oliver Maor */
 	}
-/* End code added by Oliver Maor */	
-}
 }
 //END FIELD
 //START ERRORS VALIDATION MULTI SITE
 function spam_master_recaptcha_register_multi_errors($result){
-/* Code added by Oliver Maor */
-if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-	/* End code added by Oliver Maor */
 	if(isset($_POST['g-recaptcha-response'])){
 	$captcha=$_POST['g-recaptcha-response'];
 		if(!$captcha){
 				$result['errors']->add('invalid_email',__('<strong>SPAM MASTER</strong>: Insert Correct Captcha','spam_master'));
 				echo '<p class="error"><strong>SPAM MASTER</strong>: Insert Correct Captcha</p>';
 		}
-	/* Code added by Oliver Maor */
 	}
-/*End code added by Oliver Maor */
-}
 return $result;
 }
 //END ERRORS MULTI VALIDATION
 //START ERRORS VALIDATION SINGLE SITE
 function spam_master_recaptcha_register_single_errors($errors){
-if(isset($_POST['g-recaptcha-response'])){
-$captcha=$_POST['g-recaptcha-response'];
-	if(!$captcha){
-		if(is_multisite()){
-			$errors->add('error', __('<strong>SPAM MASTER</strong>: Insert Correct Captcha','spam_master') );
-			echo '<p class="error"><strong>SPAM MASTER</strong>: Insert Correct Captcha</p>';
-		}
-		else{
-			$errors->add('error', __('<strong>SPAM MASTER</strong>: Insert Correct Captcha','spam_master') );
+	if(isset($_POST['g-recaptcha-response'])){
+	$captcha=$_POST['g-recaptcha-response'];
+		if(!$captcha){
+			if(is_multisite()){
+				$errors->add('error', __('<strong>SPAM MASTER</strong>: Insert Correct Captcha','spam_master') );
+				echo '<p class="error"><strong>SPAM MASTER</strong>: Insert Correct Captcha</p>';
+			}
+			else{
+				$errors->add('error', __('<strong>SPAM MASTER</strong>: Insert Correct Captcha','spam_master') );
+			}
 		}
 	}
-}
 return $errors;
 //END ERRORS VALIDATION
 }
-//END $spam_master_recaptcha_registration - true
+
+	//END public key
 	}
+//END $spam_master_recaptcha_registration - true
 }
 //////////////////////////////////////
 //IMPLEMENT RECAPTCHA FRONTEND LOGIN//
 //////////////////////////////////////
 if ($spam_master_recaptcha_login == 'true'){
 	if ($spam_master_recaptcha_public_key !== ''){
-		/* Code added by Oliver Maor */
-		if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-			/*End code added by Oliver Maor */
+		if ( $spam_master_recaptcha_ampoff !== 'true' ) {
 			//MULTISITE HOOKS
 			if(is_multisite()){
 				add_action('signup_extra_fields', 'spam_master_recaptcha_login_field' );
@@ -329,11 +309,10 @@ if ($spam_master_recaptcha_login == 'true'){
 			else{
 				add_action('login_enqueue_scripts', 'spam_master_recaptcha_login_css');
 				add_action('login_form', 'spam_master_recaptcha_login_field');
-				add_filter( 'wp_authenticate_user', 'spam_master_recaptcha_login_errors', 10, 3 );
+				add_filter( 'authenticate', 'spam_master_recaptcha_login_errors', 10, 3 );
 			}
-		/*Code added by Oliver Maor */
 		}
-		/* End code added by Oliver Maor */
+
 //CSS FOR SINGLE SITE
 function spam_master_recaptcha_login_css(){
 	echo '<style type="text/css">';
@@ -348,28 +327,16 @@ if(is_multisite()){
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_blog_option($blog_id, 'spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_blog_option($blog_id, 'spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
 else{
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_option('spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
-/* Code added by Oliver Maor */
-if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-/*End code added by Oliver Maor */
-	echo	'<script src="https://www.google.com/recaptcha/api.js"></script>';
-	echo	'<label>Re-CAPTCHA Code</label>' .
-			'<div class="g-recaptcha" data-theme="'.$spam_master_recaptcha_theme.'" data-sitekey="' . $spam_master_recaptcha_public_key . '"></div>';
+echo	'<script src="https://www.google.com/recaptcha/api.js"></script>';
+echo	'<label>Re-CAPTCHA Code</label>' .
+		'<div class="g-recaptcha" data-theme="'.$spam_master_recaptcha_theme.'" data-sitekey="' . $spam_master_recaptcha_public_key . '"></div>';
 //END FIELD
-/* Code added by Oliver Maor */
-}
-/* End code added by Oliver Maor */
 }
 
 //START ERRORS VALIDATION
@@ -379,29 +346,20 @@ if(is_multisite()){
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_blog_option($blog_id, 'spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_blog_option($blog_id, 'spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
 else{
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_option('spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
-/* Code added / modified by Oliver Maor */
-if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-	return $user;
-}
-	elseif /* End code added / modified by Oliver Maor */( isset( $_POST['g-recaptcha-response'] ) ) {
+	if ( isset( $_POST['g-recaptcha-response'] ) ) {
 		$response = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $spam_master_recaptcha_secret_key . '&response=' . $_POST['g-recaptcha-response'] );
 		$response = json_decode( $response['body'], true );
-		if ( true === $response['success'] ) {
-			return $user;
-		} else {
+		if ( false === $response['success'] ) {
 			return new WP_Error( 'Captcha Invalid', spam_master_get_error_message() );
+		}
+		else {
+			return $user;
 		}
 	}
 }
@@ -411,12 +369,15 @@ function spam_master_get_error_message() {
 	$custom_error = '<strong>SPAM MASTER:</strong> Insert Correct Captcha';
 	if ( $custom_error ) {
 		return __( $custom_error );
-	} else {
+	}
+	else {
 		return __( '<strong>Silence is Gold</strong>' );
 	}
 }
-//END $spam_master_recaptcha_login - true
+
+	//END public key
 	}
+//END $spam_master_recaptcha_login - true
 }
 
 /////////////////////////////////////////
@@ -424,17 +385,20 @@ function spam_master_get_error_message() {
 /////////////////////////////////////////
 if ($spam_master_recaptcha_comments == 'true'){
 	if ($spam_master_recaptcha_public_key !== ''){
-		//MULTISITE HOOKS
-		if(is_multisite()){
-		add_action( 'comment_form_after_fields', 'spam_master_comment_field', 1);
-		add_filter( 'preprocess_comment', 'spam_master_verify_comment_data' );
+		if ( $spam_master_recaptcha_ampoff !== 'true' ) {
+			//MULTISITE HOOKS
+			if(is_multisite()){
+				add_action( 'comment_form_after_fields', 'spam_master_comment_field', 1);
+				add_filter( 'preprocess_comment', 'spam_master_verify_comment_data' );
+			}
+			//SINGLE SITE HOOKS
+			else{
+				add_action('login_enqueue_scripts', 'spam_master_recaptcha_comments_css');
+				add_action( 'comment_form_after_fields', 'spam_master_comment_field', 1);
+				add_filter( 'preprocess_comment', 'spam_master_verify_comment_data' );
+			}
 		}
-		//SINGLE SITE HOOKS
-		else{
-		add_action('login_enqueue_scripts', 'spam_master_recaptcha_comments_css');
-		add_action( 'comment_form_after_fields', 'spam_master_comment_field', 1);
-		add_filter( 'preprocess_comment', 'spam_master_verify_comment_data' );
-		}
+
 //CSS FOR SINGLE SITE
 function spam_master_recaptcha_comments_css(){
 	echo '<style type="text/css">';
@@ -447,28 +411,16 @@ if(is_multisite()){
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_blog_option($blog_id, 'spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_blog_option($blog_id, 'spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
 else{
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_option('spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
-/* Code added by Oliver Maor */
-if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-/*End code added by Oliver Maor */
-	echo	'<script src="https://www.google.com/recaptcha/api.js"></script>';
-	echo	'<p class="comment-form-recaptcha">' .
-			'<label>Re-CAPTCHA Code</label>' .
-			'<div class="g-recaptcha" data-theme="'.$spam_master_recaptcha_theme.'" data-sitekey="' . $spam_master_recaptcha_public_key . '"></div></p>';
-	/*Code added by Oliver Maor */
-	}
-	/*End code added by Oliver Maor */
+echo	'<script src="https://www.google.com/recaptcha/api.js"></script>';
+echo	'<p class="comment-form-recaptcha">' .
+		'<label>Re-CAPTCHA Code</label>' .
+		'<div class="g-recaptcha" data-theme="'.$spam_master_recaptcha_theme.'" data-sitekey="' . $spam_master_recaptcha_public_key . '"></div></p>';
 }
 //COMMENT VERIFICATION
 function spam_master_verify_comment_data($commentdata){
@@ -477,23 +429,12 @@ if(is_multisite()){
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_blog_option($blog_id, 'spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_blog_option($blog_id, 'spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 }
 else{
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_option('spam_master_recaptcha_theme');
-/* Code added by Oliver Maor */
-$spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
-}
-/* Code added / modified by Oliver Maor */
-	if ( !('true' == spam_master_amp_check() && !( 'true' == $spam_master_recaptcha_ampoff ) ) ) {
-			return $commentdata;
-	}
-	elseif /*End code added / modified by Oliver Maor */ ( isset( $_POST['g-recaptcha-response'] ) ) {
+	if ( isset( $_POST['g-recaptcha-response'] ) ) {
 		$response = wp_remote_get( 'https://www.google.com/recaptcha/api/siteverify?secret=' . $spam_master_recaptcha_secret_key . '&response=' . $_POST['g-recaptcha-response'] );
 		$response = json_decode( $response['body'], true );
 		if ( true === $response['success'] ) {
@@ -504,8 +445,11 @@ $spam_master_recaptcha_ampoff = get_option('spam_master_recaptcha_ampoff');
 		}
 	}
 }
-//END $spam_master_recaptcha_comments - true
+}
+
+	//END public key
 	}
+//END $spam_master_recaptcha_comments - true	
 }
 
 ///////////////////////////////
@@ -839,18 +783,3 @@ function spam_master_attempt_remove_comment_website_field($fields){
 }
 add_filter('comment_form_default_fields','spam_master_attempt_remove_comment_website_field');
 }
-/* Code added by Oliver Maor */
-/* Function to check whether an AMP page is being retrieved */
-/* Supports two AMP Plugins: "AMP for WP" and "AMP" by Automattic, Inc. */
-function spam_master_amp_check() {
-	if (function_exists( 'ampforwp_is_amp_endpoint' ) && ampforwp_is_amp_endpoint () ) {
-		return 'true';
-	}
-	elseif (function_exists( 'is_amp_endpoint' ) && is_amp_endpoint () ) {
-		return 'true';
-	}
-	else{
-		return 'false';
-	}
-}
-/* End code added by Oliver Maor */
