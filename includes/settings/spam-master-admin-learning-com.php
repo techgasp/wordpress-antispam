@@ -2,12 +2,15 @@
 //post data if license status is valid
 if(is_multisite()){
 $response_key = get_blog_option($blog_id, 'spam_master_status');
+$spam_master_comment_strict_on = get_blog_option($blog_id, 'spam_master_comment_strict_on');
 }
 else{
 $response_key = get_option('spam_master_status');
+$spam_master_comment_strict_on = get_option('spam_master_comment_strict_on');
 }
 //Set malfunctions as VALID
 if($response_key == 'VALID' || $response_key == 'MALFUNCTION_1' || $response_key == 'MALFUNCTION_2'){
+	if($spam_master_comment_strict_on == 'true'){
 	add_filter( 'pre_comment_approved', 'spam_master_comment_learning', '99', 2 );
 	add_filter( 'pre_trackback_post', 'spam_master_comment_learning', '99', 2 );
 	function spam_master_comment_learning($approved, $commentdata){
@@ -592,6 +595,8 @@ if($response_key == 'VALID' || $response_key == 'MALFUNCTION_1' || $response_key
 		//end admins check
 		}
 	//end func comments
+	}
+	//end spam_master_comment_strict_on
 	}
 //end valid
 }

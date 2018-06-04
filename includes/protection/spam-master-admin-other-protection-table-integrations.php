@@ -56,14 +56,12 @@ if(is_multisite()){
 	else{
 	update_blog_option($blog_id, 'spam_master_recaptcha_preview', 'false' );
 	}
-	/* Code added by Oliver Maor */
 	if (isset($_POST['spam_master_recaptcha_ampoff'])){
 	update_blog_option($blog_id, 'spam_master_recaptcha_ampoff', $_POST['spam_master_recaptcha_ampoff'] );
 	}
 	else{
-	update_blog_option($blog_id, 'spam_master_recaptcha_ampoff', 'true' );
+	update_blog_option($blog_id, 'spam_master_recaptcha_ampoff', 'false' );
 	}
-	/*End code added by Oliver Maor */
 	if (isset($_POST['spam_master_honeypot_timetrap'])){
 	update_blog_option($blog_id, 'spam_master_honeypot_timetrap', $_POST['spam_master_honeypot_timetrap'] );
 	}
@@ -138,14 +136,12 @@ else{
 	else{
 	update_option('spam_master_recaptcha_preview', 'false' );
 	}
-	/* Code added by Oliver Maor */
 	if (isset($_POST['spam_master_recaptcha_ampoff'])){
 	update_option('spam_master_recaptcha_ampoff', $_POST['spam_master_recaptcha_ampoff'] );
 	}
 	else{
-	update_option('spam_master_recaptcha_ampoff', 'true' );
+	update_option('spam_master_recaptcha_ampoff', 'false' );
 	}
-	/*End code added by Oliver Maor */
 	if (isset($_POST['spam_master_honeypot_timetrap'])){
 	update_option('spam_master_honeypot_timetrap', $_POST['spam_master_honeypot_timetrap'] );
 	}
@@ -307,9 +303,7 @@ $spam_master_integrations_woocommerce = get_option('spam_master_integrations_woo
 				<p>Activating Re-Captcha adds a captcha code field to the Login Page, Registration page or to all Comments of your <b>Wordpress</b>.</p>
 				<p>Activating re-captcha will automatically eliminate all "bots" or "robots" fake registrations. <b>Make sure you have no other plugins installed that use captcha's or re-captcha</b></p>
 				<p>Re-Captcha is freely provided by google and requires a google api key that you can get in seconds. Get your free google <a href="https://www.google.com/recaptcha/intro/index.html" title="re-captcha" target="_blank">re-captcha key</a>.</p>
-				<!-- Code added by Oliver Maor-->
-				<p>Re-Captcha works on Accelerated Mobile Pages (AMP), but does not conform to the <a href="https://www.ampproject.org/docs/reference/components" target="_blank">strict AMP standard definitions</a>.<br />It is therefore recommended to switch it off for AMP pages.</p>
-				<!-- End code added by Oliver Maor-->
+				<p>Re-Captcha works on Accelerated Mobile Pages (AMP), but does not conform to the <a href="https://www.ampproject.org/docs/reference/components" target="_blank"> strict AMP standard definitions</a>. It is therefore recommended to switch it off for AMP pages.</p>
 			</th>
 		</tr>
 		<tr class="alternate">
@@ -355,21 +349,17 @@ $spam_master_integrations_woocommerce = get_option('spam_master_integrations_woo
 				<p>Color Scheme options are: <b>light</b> or <b>dark</b>.</p>
 			</td>
 		</tr>
-		<!-- Code added by Oliver Maor-->
-				<tr class="alternate">
-			<td>
+		<tr class="alternate">
+			<td colspan="2">
 				<input name="spam_master_recaptcha_ampoff" id="spam_master_recaptcha_ampoff" value="true" type="checkbox" <?php if(is_multisite()){echo get_blog_option($blog_id, 'spam_master_recaptcha_ampoff') == 'true' ? 'checked="checked"':'';}else{echo get_option('spam_master_recaptcha_ampoff') == 'true' ? 'checked="checked"':'';} ?> />
 				<label for="spam_master_recaptcha_ampoff"><b><?php _e('Switch off Re-Captcha on AMP pages', 'spam_master'); ?></b></label>
 			</td>
-			<td></td>
 		</tr>
-		<!-- End code added by Oliver Maor-->
 		<tr class="alternate">
-			<td>
+			<td colspan="2">
 				<input name="spam_master_recaptcha_preview" id="spam_master_recaptcha_preview" value="true" type="checkbox" <?php if(is_multisite()){echo get_blog_option($blog_id, 'spam_master_recaptcha_preview') == 'true' ? 'checked="checked"':'';}else{echo get_option('spam_master_recaptcha_preview') == 'true' ? 'checked="checked"':'';} ?> />
 				<label for="spam_master_recaptcha_preview"><b><?php _e('Activate Re-Captcha Preview', 'spam_master'); ?></b></label>
 			</td>
-			<td></td>
 		</tr>
 		<tr class="alternate">
 			<th colspan="2">
@@ -377,9 +367,7 @@ $spam_master_integrations_woocommerce = get_option('spam_master_integrations_woo
 if(is_multisite()){
 $spam_master_recaptcha_version = get_blog_option($blog_id, 'spam_master_recaptcha_version');
 $spam_master_recaptcha_preview = get_blog_option($blog_id, 'spam_master_recaptcha_preview');
-/* Code added by Oliver Maor */
 $spam_master_recaptcha_preview = get_blog_option($blog_id, 'spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 $spam_master_recaptcha_public_key = get_blog_option($blog_id, 'spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_blog_option($blog_id,'spam_master_recaptcha_theme');
@@ -387,9 +375,7 @@ $spam_master_recaptcha_theme = get_blog_option($blog_id,'spam_master_recaptcha_t
 else{
 $spam_master_recaptcha_version = get_option('spam_master_recaptcha_version');
 $spam_master_recaptcha_preview = get_option('spam_master_recaptcha_preview');
-/* Code added by Oliver Maor */
 $spam_master_recaptcha_preview = get_option('spam_master_recaptcha_ampoff');
-/* End code added by Oliver Maor */
 $spam_master_recaptcha_public_key = get_option('spam_master_recaptcha_public_key');
 $spam_master_recaptcha_secret_key = get_option('spam_master_recaptcha_secret_key');
 $spam_master_recaptcha_theme = get_option('spam_master_recaptcha_theme');

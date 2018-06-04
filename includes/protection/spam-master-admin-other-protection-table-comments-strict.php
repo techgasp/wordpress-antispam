@@ -9,6 +9,12 @@ global $wp_nonce, $current_user, $wpdb, $blog_id;
 //Save data	
 if(isset($_POST['update_comments_strict'])){
 if(is_multisite()){
+if (isset($_POST['spam_master_comment_strict_on'])){
+update_blog_option($blog_id, 'spam_master_comment_strict_on', 'true' );
+}
+else{
+update_blog_option($blog_id, 'spam_master_comment_strict_on', 'false' );
+}
 if (isset($_POST['require_name_email'])){
 update_blog_option($blog_id, 'require_name_email', '1' );
 }
@@ -72,6 +78,12 @@ update_blog_option($blog_id, 'comment_spam_char', 'false');
 }
 //single
 else{
+if (isset($_POST['spam_master_comment_strict_on'])){
+update_option('spam_master_comment_strict_on', 'true' );
+}
+else{
+update_option('spam_master_comment_strict_on', 'false' );
+}
 if (isset($_POST['require_name_email'])){
 update_option('require_name_email', '1' );
 }
@@ -139,6 +151,28 @@ update_option('comment_spam_char', 'false');
 </div>
 <?php
 }
+//END POST
+else{
+}
+
+if(is_multisite()){
+$spam_master_comment_strict_on = get_blog_option($blog_id, 'spam_master_comment_strict_on');
+	if($spam_master_comment_strict_on == 'true'){
+		$spam_master_comment_strict_on_status = '<td colspan="3" style="vertical-align:middle; width:70%;" bgcolor="#07B357"><font color="white"><b>ONLINE</b></font></td>';
+	}
+	else{
+		$spam_master_comment_strict_on_status = '<td colspan="3" style="vertical-align:middle; width:70%;" bgcolor="#563a3a"><font color="white"><b>OFFLINE</b></font></td>';
+	}
+}
+else{
+$spam_master_comment_strict_on = get_option('spam_master_comment_strict_on');
+	if($spam_master_comment_strict_on == 'true'){
+		$spam_master_comment_strict_on_status = '<td colspan="3" style="vertical-align:middle; width:70%;" bgcolor="#07B357"><font color="white"><b>ONLINE</b></font></td>';
+	}
+	else{
+		$spam_master_comment_strict_on_status = '<td colspan="3" style="vertical-align:middle; width:70%;" bgcolor="#563a3a"><font color="white"><b>OFFLINE</b></font></td>';
+	}
+}
 ?>
 <form method="post" width='1'>
 <fieldset class="options">
@@ -167,18 +201,25 @@ update_option('comment_spam_char', 'false');
 		</tr>
 		<tr>
 			<td>
+				<input name="spam_master_comment_strict_on" id="spam_master_comment_strict_on" value="true" type="checkbox" <?php echo $spam_master_comment_strict_on == 'true' ? 'checked="checked"':''; ?> />
+				<label for="spam_master_comment_strict_on"><b><?php _e('Activate Comments Scan', 'spam_master'); ?></b></label>
+			</td>
+			<?php echo $spam_master_comment_strict_on_status; ?>
+		</tr>
+		<tr>
+			<td style="width:25%;">
 				<input name="require_name_email" id="require_name_email" value="true" type="checkbox" <?php if(is_multisite()){echo get_blog_option($blog_id, 'require_name_email') == '1' ? 'checked="checked"':'';}else{echo get_option('require_name_email') == '1' ? 'checked="checked"':'';} ?> />
 				<label for="require_name_email"><b><?php _e('Comment author must fill out name and email', 'spam_master'); ?></b></label>
 			</td>
-			<td>
+			<td style="width:25%;">
 				<input name="comment_registration" id="comment_registration" value="true" type="checkbox" <?php if(is_multisite()){echo get_blog_option($blog_id, 'comment_registration') == '1' ? 'checked="checked"':'';}else{echo get_option('comment_registration') == '1' ? 'checked="checked"':'';} ?> />
 				<label for="comment_registration"><b><?php _e('Users must be registered and logged in to comment', 'spam_master'); ?></b></label>
 			</td>
-			<td>
+			<td style="width:24%;">
 				<input name="comment_moderation" id="comment_moderation" value="true" type="checkbox" <?php if(is_multisite()){echo get_blog_option($blog_id, 'comment_moderation') == '1' ? 'checked="checked"':'';}else{echo get_option('comment_moderation') == '1' ? 'checked="checked"':'';} ?> />
 				<label for="comment_moderation"><b><?php _e('Comment must be manually approved', 'spam_master'); ?></b></label>
 			</td>
-			<td>
+			<td style="width:26%;">
 				<input name="comment_whitelist" id="comment_whitelist" value="true" type="checkbox" <?php if(is_multisite()){echo get_blog_option($blog_id, 'comment_whitelist') == '1' ? 'checked="checked"':'';}else{echo get_option('comment_whitelist') == '1' ? 'checked="checked"':'';} ?> />
 				<label for="comment_whitelist"><b><?php _e('Comment author must have a previously approved comment', 'spam_master'); ?></b></label>
 			</td>
