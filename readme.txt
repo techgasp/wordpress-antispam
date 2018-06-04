@@ -2,7 +2,7 @@
 Contributors: TechGasp
 Tags: firewall, spam, antispam, anti-spam, registration, hotmail, bot, captcha, comment, block registration, block user, login
 Requires at least: 3.5
-Tested up to: 4.9.5
+Tested up to: 4.9.6
 Stable tag: 5.5.9
 License: GPLv2 or later
 
@@ -120,6 +120,12 @@ Fast loading, Spam Master is modular... it only loads what is needed to keep you
 
 
 == Changelog ==
+
+= 5.5.9 =
+* Adding option in protection tools to turn off wordpress native comment scanning. Default installation is On.
+* Adding reCaptcha support for AMP for Wordpress, submitted by Oliver Maor
+* Changing reCaptcha verification hook in login pages
+* Adding unistall options
 
 = 5.5.8 =
 * Base enconding emails for safety
